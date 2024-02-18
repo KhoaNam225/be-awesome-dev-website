@@ -71,9 +71,6 @@ jobs:
           name: front-end-build-artifact
           path: ./front-end-build-artifact
 
-      - name: Display folder structure
-        run: ls -R
-
       - name: Upload build artifact to S3 bucket
         working-directory: ./front-end-build-artifact
         run: aws s3 cp . s3://${{ env.BUILD_ARTIFACT_BUCKET_NAME }} --recursive
