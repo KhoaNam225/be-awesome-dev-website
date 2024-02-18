@@ -69,6 +69,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: front-end-build-artifact
+          path: ./front-end-build-artifact
 
       - name: Display folder structure
         run: ls -R
