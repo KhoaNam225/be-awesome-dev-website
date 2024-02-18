@@ -47,13 +47,14 @@ jobs:
       - name: Build Next.js project
         run: npm run build
 
-      # - name: Archive front-end build artifacts
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: front-end-build-artifact
-      #     path: ./front-end/out
+      - name: Archive front-end build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: front-end-build-artifact
+          path: ./front-end/out
 
   UploadBuildArtifactToS3:
+    needs: FrontEndBuild
     runs-on: ubuntu-latest
 
     steps:
@@ -64,6 +65,9 @@ jobs:
           role-session-name: github-action-role-session
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Unzip artifact
+        run: unzip front-end-build-artifact.zip -d ./front-end-build-artifact
+
       - name: Upload build artifact to S3 bucket
-        working-directory: ./front-end/out
+        working-directory: ./front-end-build-artifact
         run: aws s3 cp . s3://${{ env.AWS_REGION }} --recursive
