@@ -7,7 +7,7 @@ export function getS3Client(): S3Client {
     const secretAccessKey =
       process.env.AWS_SECRET_ACCESS_KEY ?? 'AWS_SECRET_ACCESS_KEY_NOT_FOUND'
     const region = process.env.AWS_REGION ?? 'us-east-1'
-    const endpoint = process.env.URL_ENDPOINT ?? 'http://localhost:4566'
+    const endpoint = process.env.URL_ENDPOINT ?? undefined
 
     return new S3Client({
       region,
