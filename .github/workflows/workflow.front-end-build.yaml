@@ -76,4 +76,4 @@ jobs:
 
       - name: Upload build artifact to S3 bucket
         working-directory: ./front-end-build-artifact
-        run: aws s3 cp . s3://${{ env.AWS_REGION }} --recursive
+        run: aws s3 cp . s3://${{ env.BUILD_ARTIFACT_BUCKET_NAME }} --recursive
