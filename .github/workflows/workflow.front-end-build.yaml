@@ -65,8 +65,10 @@ jobs:
           role-session-name: github-action-role-session
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Unzip artifact
-        run: unzip front-end-build-artifact.zip -d ./front-end-build-artifact
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: front-end-build-artifact
 
       - name: Upload build artifact to S3 bucket
         working-directory: ./front-end-build-artifact
