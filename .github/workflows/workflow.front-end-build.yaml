@@ -17,6 +17,7 @@ env:
   AWS_REGION: "ap-southeast-1"
   POSTS_CONTENT_BUCKET_NAME: "be-awesome-dev-posts"
   BUILD_ARTIFACT_BUCKET_NAME: "be-awesome-dev-build-artifact"
+  TEMP_BUILD_ARTIFACT_BUCKET_NAME: "be-awesome-dev-temporary-build-artifact"
 
 jobs:
   FrontEndBuild:
@@ -71,6 +72,9 @@ jobs:
           name: front-end-build-artifact
           path: ./front-end-build-artifact
 
-      - name: Upload build artifact to S3 bucket
+      - name: Upload build artifact to temporary S3 bucket
         working-directory: ./front-end-build-artifact
-        run: aws s3 cp . s3://${{ env.BUILD_ARTIFACT_BUCKET_NAME }} --recursive
+        run: aws s3 cp . s3://${{ env.TEMP_BUILD_ARTIFACT_BUCKET_NAME }} --recursive
+
+      - name: Sync build artifact between temporary S3 bucket with official bucket
+        run: aws s3 sync s3://${{ env.TEMP_BUILD_ARTIFACT_BUCKET_NAME }} s3://${{ env.BUILD_ARTIFACT_BUCKET_NAME }} --delete
