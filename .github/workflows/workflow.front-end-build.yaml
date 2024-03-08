@@ -18,6 +18,7 @@ env:
   POSTS_CONTENT_BUCKET_NAME: "be-awesome-dev-posts"
   BUILD_ARTIFACT_BUCKET_NAME: "be-awesome-dev-build-artifact"
   TEMP_BUILD_ARTIFACT_BUCKET_NAME: "be-awesome-dev-temporary-build-artifact"
+  CLOUDFRONT_DISTRIBUTION_ID: "E3OHZDGF4P6D7N"
 
 jobs:
   FrontEndBuild:
@@ -78,3 +79,6 @@ jobs:
 
       - name: Sync build artifact between temporary S3 bucket with official bucket
         run: aws s3 sync s3://${{ env.TEMP_BUILD_ARTIFACT_BUCKET_NAME }} s3://${{ env.BUILD_ARTIFACT_BUCKET_NAME }} --delete
+
+      - name: Create invalidation in CloudFront
+        run: aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
