@@ -74,7 +74,9 @@ function SideMenuItem({
             : 'hover:bg-[#ebecf2]')
         }
       >
-        <Link href={`/posts/${url ?? '#'}`}>{processedTitle}</Link>
+        <Link href={`/posts/${url ?? '#'}`} className="block">
+          {processedTitle}
+        </Link>
       </li>
     )
   }
