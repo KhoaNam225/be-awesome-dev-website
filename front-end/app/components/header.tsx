@@ -4,6 +4,7 @@ import Lottie, { LottieRef } from 'lottie-react'
 import { usePathname } from 'next/navigation'
 import { useEffect, useRef } from 'react'
 import hamburgerMenuAnimations from '../../public/animations/hamburger-menu.json'
+import chatBotAnimation from '../../public/animations/chat-bot.json'
 import { courierPrime, firaCode } from '../utils/fonts'
 import Link from 'next/link'
 
@@ -18,6 +19,7 @@ export default function Header({
 }: HeaderProps) {
   const pathname = usePathname()
   const hamburgerMenuLottieRef: LottieRef = useRef(null)
+  const chatBotLottieRef: LottieRef = useRef(null)
 
   const toggleSideBar = () => {
     setSidebarOpened(!sidebarOpened)
@@ -57,6 +59,17 @@ export default function Header({
       <span className={'text-lg self-end mb-1 ' + courierPrime.className}>
         {getHeaderText(pathname)}
       </span>
+      <button
+        className="ml-auto w-[60px] h-[60px] rounded-full transition-all duration-300 ease-in-out hover:bg-[#ebecf2] hover:text-white w-13 h-13 text-lg p-2"
+        onClick={() => toggleSideBar()}
+      >
+        <Lottie
+          lottieRef={chatBotLottieRef}
+          animationData={chatBotAnimation}
+          loop={true}
+          autoPlay={true}
+        ></Lottie>
+      </button>{' '}
     </header>
   )
 }
