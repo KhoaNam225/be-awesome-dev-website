@@ -1,6 +1,6 @@
 'use client'
 
-import { FormEvent, useRef, useState } from 'react'
+import { FormEvent, useEffect, useRef, useState } from 'react'
 import { manrope } from '../utils/fonts'
 import { ChatMessage } from '../models/chat'
 import Message from './message'
@@ -19,10 +19,21 @@ export default function ChatBar({ opened }: ChatBarProps) {
   }
 
   const sendAnimationButtonRef = useRef(null)
+  const bottomMessageListRef = useRef<HTMLDivElement>(null)
   const [conversation, setConversation] = useState<ChatMessage[]>([
     greetingMessage,
   ])
   const [userMessage, setUserMessage] = useState<string>('')
+
+  useEffect(() => {
+    if (bottomMessageListRef.current && opened) {
+      bottomMessageListRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+        inline: 'nearest',
+      })
+    }
+  }, [conversation, opened])
 
   const sendMessage = async (event: FormEvent) => {
     event.preventDefault()
@@ -62,6 +73,7 @@ export default function ChatBar({ opened }: ChatBarProps) {
         {conversation.map((message, idx) => (
           <Message key={idx} message={message}></Message>
         ))}
+        <div ref={bottomMessageListRef} />
       </div>
       <form
         onSubmit={sendMessage}
