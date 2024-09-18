@@ -11,11 +11,15 @@ import Link from 'next/link'
 export type HeaderProps = {
   sidebarOpened: boolean
   setSidebarOpened: (opened: boolean) => void
+  chatBarOpened: boolean
+  setChatBarOpened: (opened: boolean) => void
 }
 
 export default function Header({
   sidebarOpened,
   setSidebarOpened,
+  chatBarOpened,
+  setChatBarOpened,
 }: HeaderProps) {
   const pathname = usePathname()
   const hamburgerMenuLottieRef: LottieRef = useRef(null)
@@ -23,6 +27,10 @@ export default function Header({
 
   const toggleSideBar = () => {
     setSidebarOpened(!sidebarOpened)
+  }
+
+  const toggleChatBar = () => {
+    setChatBarOpened(!chatBarOpened)
   }
 
   useEffect(() => {
@@ -61,7 +69,7 @@ export default function Header({
       </span>
       <button
         className="ml-auto w-[60px] h-[60px] rounded-full transition-all duration-300 ease-in-out hover:bg-[#ebecf2] hover:text-white w-13 h-13 text-lg p-2"
-        onClick={() => toggleSideBar()}
+        onClick={() => toggleChatBar()}
       >
         <Lottie
           lottieRef={chatBotLottieRef}
