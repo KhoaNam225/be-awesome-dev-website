@@ -1,9 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { manrope } from '../utils/fonts'
 import { ChatMessage } from '../models/chat'
 import Message from './message'
+import sendAnimation from '../../public/animations/send.json'
+import Lottie from 'lottie-react'
 
 export type ChatBarProps = {
   opened: boolean
@@ -28,6 +30,7 @@ export default function ChatBar({ opened }: ChatBarProps) {
       'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Mollitia id quaerat debitis a veniam eum, ea delectus nisi commodi deleniti quia at cupiditate ad, atque ex deserunt! Impedit sed minima magni debitis sit error maxime animi aut? Laudantium praesentium hic, quaerat quos autem officia quidem placeat tempore, voluptatum ut, aliquam sunt. Mollitia distinctio eveniet facilis doloribus autem iste dolor, saepe natus odit, praesentium ipsam officia omnis modi. Distinctio cum voluptas eum maxime doloribus aliquam repudiandae dolore unde quos vero. Molestiae suscipit temporibus perspiciatis! Consequatur repellat dolor voluptates iure quibusdam quaerat mollitia neque animi labore officiis non incidunt, doloribus ipsum porro!',
   }
 
+  const sendAnimationButtonRef = useRef(null)
   const [conversation, setConversation] = useState<ChatMessage[]>([
     greetingMessage,
     humanMessage,
@@ -49,7 +52,21 @@ export default function ChatBar({ opened }: ChatBarProps) {
           <Message key={idx} message={message}></Message>
         ))}
       </div>
-      <div className="input-section"> Input section</div>
+      <div className="input-section pt-3 flex-row flex items-center">
+        <input
+          className="rounded-full outline-none bg-[#ebecf2] block px-4 py-4 flex-grow"
+          placeholder="Your message..."
+        ></input>
+        <button className="rounded-full ml-2 block w-[40px]">
+          {' '}
+          <Lottie
+            lottieRef={sendAnimationButtonRef}
+            animationData={sendAnimation}
+            loop={true}
+            autoPlay={true}
+          ></Lottie>
+        </button>
+      </div>
     </div>
   )
 }
