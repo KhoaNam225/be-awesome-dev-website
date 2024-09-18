@@ -33,7 +33,7 @@ export default function ChatBar({ opened }: ChatBarProps) {
         inline: 'nearest',
       })
     }
-  }, [conversation, opened])
+  }, [conversation])
 
   const sendMessage = async (event: FormEvent) => {
     event.preventDefault()
