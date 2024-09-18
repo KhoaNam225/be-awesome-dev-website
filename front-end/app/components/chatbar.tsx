@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { FormEvent, useRef, useState } from 'react'
 import { manrope } from '../utils/fonts'
 import { ChatMessage } from '../models/chat'
 import Message from './message'
@@ -18,24 +18,35 @@ export default function ChatBar({ opened }: ChatBarProps) {
       'Hi there! I am D.E.V. Nice to meet you! I can help you answer questions regarding the content of beAwesome.dev. Please let me know if you have any questions, always happy to help! :)',
   }
 
-  const humanMessage: ChatMessage = {
-    type: 'Human',
-    content:
-      'Hello! Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci ea temporibus sed non incidunt, culpa consequuntur error molestias ex amet cumque expedita quos, quis assumenda praesentium architecto nihil voluptas vitae.',
-  }
-
-  const fakeAiMessage: ChatMessage = {
-    type: 'Ai',
-    content:
-      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Mollitia id quaerat debitis a veniam eum, ea delectus nisi commodi deleniti quia at cupiditate ad, atque ex deserunt! Impedit sed minima magni debitis sit error maxime animi aut? Laudantium praesentium hic, quaerat quos autem officia quidem placeat tempore, voluptatum ut, aliquam sunt. Mollitia distinctio eveniet facilis doloribus autem iste dolor, saepe natus odit, praesentium ipsam officia omnis modi. Distinctio cum voluptas eum maxime doloribus aliquam repudiandae dolore unde quos vero. Molestiae suscipit temporibus perspiciatis! Consequatur repellat dolor voluptates iure quibusdam quaerat mollitia neque animi labore officiis non incidunt, doloribus ipsum porro!',
-  }
-
   const sendAnimationButtonRef = useRef(null)
   const [conversation, setConversation] = useState<ChatMessage[]>([
     greetingMessage,
-    humanMessage,
-    fakeAiMessage,
   ])
+  const [userMessage, setUserMessage] = useState<string>('')
+
+  const sendMessage = async (event: FormEvent) => {
+    event.preventDefault()
+    const newHumanMessage: ChatMessage = {
+      type: 'Human',
+      content: userMessage,
+    }
+
+    let newConversation = [...conversation, newHumanMessage]
+    setConversation(newConversation)
+    setUserMessage('')
+
+    const aiResponse = await sendNewMessage(
+      conversation,
+      newHumanMessage.content
+    )
+
+    const newAIMessage: ChatMessage = {
+      type: 'Ai',
+      content: aiResponse,
+    }
+
+    setConversation([...newConversation, newAIMessage])
+  }
 
   return (
     <div
@@ -52,13 +63,17 @@ export default function ChatBar({ opened }: ChatBarProps) {
           <Message key={idx} message={message}></Message>
         ))}
       </div>
-      <div className="input-section pt-3 flex-row flex items-center">
+      <form
+        onSubmit={sendMessage}
+        className="input-section pt-3 flex-row flex items-center"
+      >
         <input
           className="rounded-full outline-none bg-[#ebecf2] block px-4 py-4 flex-grow"
           placeholder="Your message..."
+          value={userMessage}
+          onChange={(event) => setUserMessage(event.target.value)}
         ></input>
-        <button className="rounded-full ml-2 block w-[40px]">
-          {' '}
+        <button className="rounded-full ml-2 block w-[40px]" type="submit">
           <Lottie
             lottieRef={sendAnimationButtonRef}
             animationData={sendAnimation}
@@ -66,7 +81,28 @@ export default function ChatBar({ opened }: ChatBarProps) {
             autoPlay={true}
           ></Lottie>
         </button>
-      </div>
+      </form>
     </div>
   )
+}
+
+async function sendNewMessage(
+  currentConversation: ChatMessage[],
+  newMessage: string
+) {
+  const response = await fetch(
+    'https://b411d51b-1240-4fa3-85f9-48b0d784351e.mock.pstmn.io/chat',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        chatHistory: currentConversation,
+        newMessage,
+      }),
+    }
+  )
+
+  return await response.text()
 }
