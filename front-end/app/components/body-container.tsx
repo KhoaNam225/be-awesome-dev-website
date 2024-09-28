@@ -21,7 +21,10 @@ export default function BodyContainer({
 
   return (
     <body
-      className={manrope.className + ' h-svh flex-col flex overflow-y-hidden'}
+      className={
+        manrope.className +
+        ' h-svh flex-col flex overflow-y-hidden overflow-x-hidden'
+      }
     >
       <Header
         sidebarOpened={sidebarOpened}
