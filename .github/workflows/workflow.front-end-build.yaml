@@ -14,6 +14,7 @@ on:
   workflow_dispatch:
 
 env:
+  NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
   AWS_REGION: "ap-southeast-1"
   POSTS_CONTENT_BUCKET_NAME: "be-awesome-dev-posts"
   BUILD_ARTIFACT_BUCKET_NAME: "be-awesome-dev-build-artifact"
@@ -47,7 +48,9 @@ jobs:
         run: npm install
 
       - name: Build Next.js project
-        run: npm run build
+        run: |
+          echo "NEXT_PUBLIC_API_URL=${{ env.NEXT_PUBLIC_API_URL }}" >> .env.production 
+          npm run build
 
       - name: Archive front-end build artifacts
         uses: actions/upload-artifact@v4
