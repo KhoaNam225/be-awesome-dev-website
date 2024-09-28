@@ -19,22 +19,20 @@ const CodeBlock = ({ node, inline, className, children, ...props }: any) => {
     <SyntaxHighlighter
       {...props}
       PreTag="div"
-      language={match[1]}
+      language={match[1] ?? 'typescript'}
       style={oneDark}
       className={robotoMono.className}
     >
       {String(children).replace(/\n$/, '')}
     </SyntaxHighlighter>
   ) : (
-    <SyntaxHighlighter
-      {...props}
-      PreTag="div"
-      language={'typescript'} // Default to typescript
-      style={oneDark}
-      className={robotoMono.className}
+    <code
+      className={`${className} px-2 py-4 rounded-lg ${
+        !inline ? 'block text-pretty my-3' : 'inline'
+      } ${robotoMono.className}`}
     >
-      {String(children).replace(/\n$/, '')}
-    </SyntaxHighlighter>
+      {children}
+    </code>
   )
 }
 
