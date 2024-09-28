@@ -1,12 +1,13 @@
 'use client'
 
+import { faCircleNotch } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { CSSProperties } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { ChatMessage } from '../models/chat'
 import { robotoMono } from '../utils/fonts'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleNotch } from '@fortawesome/free-solid-svg-icons'
 
 export type ChatMessageProps = {
   message: ChatMessage
@@ -20,18 +21,20 @@ const CodeBlock = ({ node, inline, className, children, ...props }: any) => {
       PreTag="div"
       language={match[1]}
       style={oneDark}
+      className={robotoMono.className}
     >
       {String(children).replace(/\n$/, '')}
     </SyntaxHighlighter>
   ) : (
-    <code
-      className={`${className} px-2 py-4 rounded-lg ${
-        !inline ? 'block text-pretty my-3' : 'inline'
-      } ${robotoMono.className}`}
+    <SyntaxHighlighter
       {...props}
+      PreTag="div"
+      language={'typescript'} // Default to typescript
+      style={oneDark}
+      className={robotoMono.className}
     >
-      {children}
-    </code>
+      {String(children).replace(/\n$/, '')}
+    </SyntaxHighlighter>
   )
 }
 
@@ -57,7 +60,7 @@ export default function Message({ message }: ChatMessageProps) {
           p: Paragraph,
         }}
       >
-        {message.content}
+        {message.message}
       </ReactMarkdown>
     </div>
   )

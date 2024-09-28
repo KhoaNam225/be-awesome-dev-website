@@ -1,11 +1,12 @@
 'use client'
 
 import { FormEvent, useEffect, useRef, useState } from 'react'
+import Lottie from 'lottie-react'
 import { manrope } from '../utils/fonts'
 import { ChatMessage } from '../models/chat'
+import { sendNewMessage } from '../services/chat-service'
 import Message from './message'
 import sendAnimation from '../../public/animations/send.json'
-import Lottie from 'lottie-react'
 
 export type ChatBarProps = {
   opened: boolean
@@ -14,7 +15,7 @@ export type ChatBarProps = {
 export default function ChatBar({ opened }: ChatBarProps) {
   const greetingMessage: ChatMessage = {
     type: 'Ai',
-    content:
+    message:
       'Hi there! I am D.E.V. Nice to meet you! I can help you answer questions regarding the content of beAwesome.dev. Please let me know if you have any questions, always happy to help! :)',
   }
 
@@ -39,11 +40,11 @@ export default function ChatBar({ opened }: ChatBarProps) {
     event.preventDefault()
     const newHumanMessage: ChatMessage = {
       type: 'Human',
-      content: userMessage,
+      message: userMessage,
     }
     const loadingMessage: ChatMessage = {
       type: 'Loading',
-      content: '',
+      message: '',
     }
 
     let newConversation = [...conversation, newHumanMessage, loadingMessage]
@@ -52,12 +53,12 @@ export default function ChatBar({ opened }: ChatBarProps) {
 
     const aiResponse = await sendNewMessage(
       conversation,
-      newHumanMessage.content
+      newHumanMessage.message
     )
 
     const newAIMessage: ChatMessage = {
       type: 'Ai',
-      content: aiResponse,
+      message: aiResponse,
     }
 
     setConversation([
@@ -103,25 +104,4 @@ export default function ChatBar({ opened }: ChatBarProps) {
       </form>
     </div>
   )
-}
-
-async function sendNewMessage(
-  currentConversation: ChatMessage[],
-  newMessage: string
-) {
-  const response = await fetch(
-    'https://b411d51b-1240-4fa3-85f9-48b0d784351e.mock.pstmn.io/chat',
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        chatHistory: currentConversation,
-        newMessage,
-      }),
-    }
-  )
-
-  return await response.text()
 }
