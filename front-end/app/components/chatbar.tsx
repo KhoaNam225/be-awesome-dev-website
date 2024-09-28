@@ -6,8 +6,6 @@ import { ChatMessage } from '../models/chat'
 import Message from './message'
 import sendAnimation from '../../public/animations/send.json'
 import Lottie from 'lottie-react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleNotch } from '@fortawesome/free-solid-svg-icons'
 
 export type ChatBarProps = {
   opened: boolean
