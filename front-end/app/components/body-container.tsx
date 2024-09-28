@@ -36,7 +36,7 @@ export default function BodyContainer({
         <SideBar filesMetaData={filesMetaData} opened={sidebarOpened}></SideBar>
         <main
           onClick={() => setSideBarOpened(false)}
-          className="flex-grow py-4 px-4 overflow-y-scroll"
+          className="flex-grow py-4 px-4 overflow-y-auto"
         >
           {children}
         </main>

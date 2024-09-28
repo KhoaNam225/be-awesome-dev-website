@@ -6,6 +6,8 @@ import { ChatMessage } from '../models/chat'
 import Message from './message'
 import sendAnimation from '../../public/animations/send.json'
 import Lottie from 'lottie-react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircleNotch } from '@fortawesome/free-solid-svg-icons'
 
 export type ChatBarProps = {
   opened: boolean
@@ -41,8 +43,12 @@ export default function ChatBar({ opened }: ChatBarProps) {
       type: 'Human',
       content: userMessage,
     }
+    const loadingMessage: ChatMessage = {
+      type: 'Loading',
+      content: '',
+    }
 
-    let newConversation = [...conversation, newHumanMessage]
+    let newConversation = [...conversation, newHumanMessage, loadingMessage]
     setConversation(newConversation)
     setUserMessage('')
 
@@ -56,7 +62,10 @@ export default function ChatBar({ opened }: ChatBarProps) {
       content: aiResponse,
     }
 
-    setConversation([...newConversation, newAIMessage])
+    setConversation([
+      ...newConversation.slice(0, newConversation.length - 1),
+      newAIMessage,
+    ])
   }
 
   return (
@@ -69,10 +78,10 @@ export default function ChatBar({ opened }: ChatBarProps) {
         manrope.className
       }
     >
-      <div className="message-section flex-grow overflow-y-scroll">
-        {conversation.map((message, idx) => (
-          <Message key={idx} message={message}></Message>
-        ))}
+      <div className="message-section flex-grow overflow-y-auto">
+        {conversation.map((message, idx) => {
+          return <Message key={idx} message={message}></Message>
+        })}
         <div ref={bottomMessageListRef} />
       </div>
       <form

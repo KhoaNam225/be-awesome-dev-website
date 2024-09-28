@@ -5,6 +5,8 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { ChatMessage } from '../models/chat'
 import { robotoMono } from '../utils/fonts'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircleNotch } from '@fortawesome/free-solid-svg-icons'
 
 export type ChatMessageProps = {
   message: ChatMessage
@@ -38,6 +40,14 @@ const Paragraph = ({ children, ...props }: any) => {
 }
 
 export default function Message({ message }: ChatMessageProps) {
+  if (message.type === 'Loading') {
+    return (
+      <div className={getMessageClassName(message)}>
+        <FontAwesomeIcon icon={faCircleNotch} spin />
+        <span className="ml-2">I&apos;m thinking...</span>
+      </div>
+    )
+  }
   return (
     <div className={getMessageClassName(message)}>
       <ReactMarkdown
@@ -54,12 +64,21 @@ export default function Message({ message }: ChatMessageProps) {
 }
 
 function getMessageClassName(message: ChatMessage) {
-  const baseClasses: string[] = ['rounded-lg', 'p-4', 'w-[90%]', 'mt-4']
+  const baseClasses: string[] = [
+    'rounded-xl',
+    'px-4',
+    'max-w-[90%]',
+    'mt-4',
+    'py-1',
+    'w-fit',
+  ]
 
   if (message.type === 'Ai') {
     baseClasses.push('bg-[#ebecf2]')
-  } else {
+  } else if (message.type === 'Human') {
     baseClasses.push('ml-auto', 'bg-[#1c63f2]', 'text-white')
+  } else {
+    baseClasses.push('bg-[#ebecf2]', 'py-2')
   }
 
   return baseClasses.join(' ')
